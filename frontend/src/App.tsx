@@ -1,26 +1,82 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import routes from './utils/routes';
+import {
+  BrowserRouter,
+  Route,
+  RouteComponentProps,
+  Switch,
+  Redirect,
+} from "react-router-dom";
+import { useDispatch, useSelector, Provider } from 'react-redux';
+import { loadUser } from './redux/actions/authActions';
+import { AuthStore } from './interfaces/authInterface';
+import store from './redux/store/store';
+import { ThemeProvider } from 'styled-components';
+import GlobalStyle from './theme/GlobalStyle';
+import { theme } from './theme/MainTheme';
+import Constants from './constants/constants';
 
-function App() {
+
+const App: React.FC<{}> = props => {
+  const {token, isAuthenticated} = useSelector(({ auth }: AuthStore) => ({
+    token: auth.token,
+    isAuthenticated: auth.isAuthenticated,
+  }));
+
+  console.log(token);
+  console.log(isAuthenticated);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch]);
+
+    /**
+   * Return location for the user, depending on the authentication
+   * @returns {string} route path
+   */
+     const returnLocation = () => {
+      // if user is not authenticated, go to login view
+      if (!isAuthenticated) {
+        return Constants.ROUTE__LOGIN
+      }
+
+      // otherwise, dispatch the authentication action and go to the main view
+      return Constants.ROUTE__MAIN;
+    };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <GlobalStyle />
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Switch>
+            {routes.map((route,index)=> (
+              <Route key={index}
+              path={route.path}
+              exact = {route.exact}
+              render={(props: RouteComponentProps<any>) => (
+                <route.component
+                name={route.name}
+                {...props}
+                {...route.props}
+                />
+              )}
+              />
+            ))}
+            <Redirect from="*" to={returnLocation()}/>
+          </Switch>
+        </BrowserRouter>
+      </ThemeProvider>
+    </>
   );
 }
 
-export default App;
+const AppWrapper = () => {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
+};
+export default AppWrapper;
