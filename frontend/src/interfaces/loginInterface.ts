@@ -1,5 +1,5 @@
 export interface LoginFormTitle {
-    title: string
+    title: string;
 }
 
 export interface MyFormValues {

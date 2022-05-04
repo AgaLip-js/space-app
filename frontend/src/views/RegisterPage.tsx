@@ -1,17 +1,12 @@
-import React from 'react'
+import React from 'react';
 import RegisterForm from '../components/RegisterForm/RegisterForm';
+import { IPage } from '../interfaces/routesInterface';
 import FirstPageTemplate from '../templates/FirstPageTemplate';
 
-interface IPage {
-    name: string
-}
-
-const RegisterPage: React.FC<IPage> = props => {
-    return (
-        <FirstPageTemplate>
-        <RegisterForm/>
-    </FirstPageTemplate>
-    )
-};
+const RegisterPage: React.FC<IPage> = props => (
+  <FirstPageTemplate>
+    <RegisterForm />
+  </FirstPageTemplate>
+);
 
 export default RegisterPage;

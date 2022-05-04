@@ -14,13 +14,10 @@ const User = require("../models/User");
 
 router.post("/register", async (req, res) => {
   try {
-    const { errors, isValid } = validateRegisterInput(req.body);
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
+    console.log('here')
     const user = await User.findOne({ email: req.body.email });
     if (user) {
-      return res.status(400).json({ email: "Email already exists" });
+      return res.status(400).json("Email already exists");
     } else {
       const avatar = gravatar.url(req.body.email, {
         s: "200",
@@ -28,7 +25,7 @@ router.post("/register", async (req, res) => {
         d: "mm",
       });
       const newUser = new User({
-        name: req.body.name,
+        login: req.body.login,
         email: req.body.email,
         avatar,
         password: req.body.password,
@@ -46,7 +43,7 @@ router.post("/register", async (req, res) => {
       });
     }
   } catch (err) {
-    res.json({ msg: "error" });
+    res.json("Unexpected error occurs");
   }
 });
 
@@ -56,10 +53,10 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { errors, isValid } = validateLoginInput(req.body);
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
+    // const { errors, isValid } = validateLoginInput(req.body);
+    // if (!isValid) {
+    //   return res.status(400).json(errors);
+    // }
     const email = req.body.email;
     const password = req.body.password;
     const user = await User.findOne({ email });
@@ -70,7 +67,7 @@ router.post("/login", async (req, res) => {
     if (isMatch) {
       //User matched
       //created payload - consists of the session data
-      const payload = { id: user.id, name: user.name, avatar: user.avatar }; //Create JWT payload
+      const payload = { id: user.id, login: user.login, avatar: user.avatar }; //Create JWT payload
 
       //Sign Token
       jwt.sign(

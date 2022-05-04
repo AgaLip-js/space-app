@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { AtomEnums } from "../../enums/atomEnums";
-import { InputProps} from "../../interfaces/atomsInterface";
+import { InputProps } from "../../interfaces/atomsInterface";
 
 const StyledInput = styled.input<{secondary: string}>`
   outline: none;
@@ -12,7 +12,7 @@ const StyledInput = styled.input<{secondary: string}>`
   border-radius: 4px;
   box-sizing: border-box;
   padding: 12px 20px;
-  color: ${({ theme}) => theme.primaryBackground};
+  color: ${({ theme }) => theme.primaryBackground};
   font-family: inherit;
   font-size: inherit;
   font-weight: ${({ theme }) => theme.font500};
@@ -20,7 +20,7 @@ const StyledInput = styled.input<{secondary: string}>`
   transition: 0.3s ease;
 
   &::placeholder {
-    color: ${({ theme}) => theme.primaryLightBackground};
+    color: ${({ theme }) => theme.primaryLightBackground};
     }
 `;
 const StyledLabel = styled.label`
@@ -53,49 +53,47 @@ const StyledTextArea = styled.textarea`
 `;
 
 const Input: React.FC<InputProps> = ({
-    type,
-    name,
-    id,
-    onChange,
-    onBlur,
-    value,
-    title,
-    secondary,
-    required,
-    textarea,
-    placeholder,
-}) => {
-    return (
-    textarea ? (
-        <>
-            <StyledTextArea
-                name={name}
-                id={id}
-                onChange={onChange}
-                onBlur={onBlur}
-                value={value}
-                required={required}
-            />
-            <StyledLabel htmlFor={id}>{title}</StyledLabel>
-        </>
-    ) : (
-        <>
-            <StyledInput
-                type={type}
-                name={name}
-                id={id}
-                onChange={onChange}
-                onBlur={onBlur}
-                value={value}
-                secondary={secondary || ''}
-                required={required}
-                placeholder={placeholder}
-                autoComplete = 'off'
-            />
-            <StyledLabel htmlFor={id}>{title}</StyledLabel>
-        </>
-    )
+  type,
+  name,
+  id,
+  onChange,
+  onBlur,
+  value,
+  title,
+  secondary,
+  required,
+  textarea,
+  placeholder,
+}) => (
+  textarea ? (
+    <>
+      <StyledTextArea
+        name={name}
+        id={id}
+        onChange={onChange}
+        onBlur={onBlur}
+        value={value}
+        required={required}
+      />
+      <StyledLabel htmlFor={id}>{title}</StyledLabel>
+    </>
+  ) : (
+    <>
+      <StyledInput
+        type={type}
+        name={name}
+        id={id}
+        onChange={onChange}
+        onBlur={onBlur}
+        value={value}
+        secondary={secondary || ''}
+        required={required}
+        placeholder={placeholder}
+        autoComplete='off'
+      />
+      <StyledLabel htmlFor={id}>{title}</StyledLabel>
+    </>
+  )
 );
-    };
 
 export default Input;

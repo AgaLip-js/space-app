@@ -1,10 +1,10 @@
 import React from "react";
 import { Formik } from "formik";
+import styled from "styled-components";
+import { useDispatch } from "react-redux";
 import Input from "../atoms/Input";
 // import Button from "../atoms/Button";
-import styled from "styled-components";
 import { login } from "../../redux/actions/authActions";
-import { useDispatch } from "react-redux";
 import { LoginFormTitle, MyFormValues } from "../../interfaces/loginInterface";
 import Button from "../atoms/Button";
 import { ButtonEnums } from "../../enums/atomEnums";
@@ -23,13 +23,15 @@ const StyledFormControl = styled.div`
   margin: 20px 0;
 `;
 
-const LoginForm: React.FC = ()=> {
+const LoginForm: React.FC = () => {
   const dispatch = useDispatch();
 
-  const initialValues: MyFormValues = { email: '', password:'' };
+  const initialValues: MyFormValues = {
+    email: '', password: '',
+  };
   return (
     <Formik
-     initialValues={initialValues}
+      initialValues={initialValues}
       onSubmit={(values: MyFormValues, { setSubmitting }: any) => {
         const user = {
           email: values.email,

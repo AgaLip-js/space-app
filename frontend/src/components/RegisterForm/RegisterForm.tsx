@@ -1,11 +1,13 @@
 import React from "react";
 import { Formik } from "formik";
+import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import * as Yup from 'yup';
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
-import styled from "styled-components";
 import { register } from "../../redux/actions/authActions";
 import { myRegisterFormValues } from "../../interfaces/loginInterface";
-import { useDispatch } from "react-redux";
+import { ButtonEnums } from "~/enums/atomEnums";
 
 const StyledForm = styled.form`
   position: relative;
@@ -26,37 +28,30 @@ const StyledErrorMsg = styled.p`
     color: ${({ theme }) => theme.errorColor};
     height: 1rem;
     margin: 0;
-`
+`;
 
-const RegisterForm: React.FC = ()=> {
-    const dispatch = useDispatch();
-    const initialValues: myRegisterFormValues = { login: '', email: '', password:'' };
+const RegisterForm: React.FC = () => {
+  const dispatch = useDispatch();
+  const initialValues: myRegisterFormValues = {
+    login: '', email: '', password: '',
+  };
+
+  const DisplayingErrorMessagesSchema = Yup.object().shape({
+    login: Yup.string()
+      .min(4, 'Login must be more than 4 characters')
+      .max(50, 'Login must be less than 50 characters')
+      .required('Required'),
+    email: Yup.string().email('Invalid email').required('Required'),
+    password: Yup.string()
+      .min(4, 'Password must be more than 4 characters')
+      .max(50, 'Password must be less than 50 characters')
+      .required('Required'),
+  });
 
   return (
     <Formik
       initialValues={initialValues}
-      validate={(values: myRegisterFormValues) => {
-        const errors = {email: '', login: '', password: ''};
-        if (!values.email) {
-          errors.email = "Required";
-        } else if (
-          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-        ) {
-          errors.email = "Invalid email address";
-        }
-        //   return errors;
-        if (!values.login) {
-          errors.login = "Required";
-        } else if (!/^[A-Z0-9._%+-]{2,}$/i.test(values.login)) {
-          errors.login = "Invalid login";
-        }
-        if (!values.password) {
-          errors.password = "Required";
-        } else if (!/^[A-Z0-9._%+-]{2,}$/i.test(values.password)) {
-          errors.password = "Invalid password";
-        }
-        return errors;
-      }}
+      validationSchema={DisplayingErrorMessagesSchema}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
           const newUser = {
@@ -90,8 +85,8 @@ const RegisterForm: React.FC = ()=> {
               onBlur={handleBlur}
               value={values.login}
               title="Login"
-              placeholder= 'Enter the login'
-              secondary = 'secondary'
+              placeholder='Enter the login'
+              secondary='secondary'
             />
             <StyledErrorMsg>{touched.email && errors.email ? errors.email : ''}</StyledErrorMsg>
             <Input
@@ -102,8 +97,8 @@ const RegisterForm: React.FC = ()=> {
               onBlur={handleBlur}
               value={values.email}
               title="Email"
-              placeholder= 'Enter the email'
-              secondary = 'secondary'
+              placeholder='Enter the email'
+              secondary='secondary'
             />
             <StyledErrorMsg>{touched.password && errors.password ? errors.password : ''}</StyledErrorMsg>
             <Input
@@ -115,10 +110,10 @@ const RegisterForm: React.FC = ()=> {
               value={values.password}
               title="Password"
               placeholder="Enter the password"
-              secondary = 'secondary'
+              secondary='secondary'
             />
           </StyledFormControl>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type={ButtonEnums.submit} disabled={isSubmitting}>
             Zatwiedź
           </Button>
         </StyledForm>

@@ -1,31 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import LoginForm from '../components/LoginForm/LoginForm';
 import { AuthStore } from '../interfaces/authInterface';
+import { IPage } from '../interfaces/routesInterface';
 import FirstPageTemplate from '../templates/FirstPageTemplate';
 
+const LoginPage = () => {
+  const history = useHistory();
 
-interface IPage {
-    name: string
-}
+  const { isAuthenticated } = useSelector(({ auth }: AuthStore) => ({
+    isAuthenticated: auth.isAuthenticated,
+  }));
 
-const LoginPage: React.FC<IPage> = props => {
-    const {isAuthenticated} = useSelector(({ auth }: AuthStore) => ({
-        isAuthenticated: auth.isAuthenticated,
-      }));
-
-    const history = useHistory();
-
+  useEffect(() => {
     if (isAuthenticated) {
-        history.push('/');
+      history.push('/');
     }
+  }, [isAuthenticated])
 
-    return (
-        <FirstPageTemplate>
-            <LoginForm/>
-        </FirstPageTemplate>
-    )
+  return (
+    <FirstPageTemplate>
+      <LoginForm />
+    </FirstPageTemplate>
+  );
 };
 
 export default LoginPage;
